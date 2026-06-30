@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABB Ability™ - Ship Delivery Intelligence (SDI) 통합 대시보드</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Data, Helpers, and Alpine Component Definition (Pre-loaded) -->
+    <script>
+        // --- Mock Data: 나라장터, 공공기관(해경, 소방, 지자체, 항만공사) & 중소형 전문 야드 완벽 구성 (총 15개 이상 초대형 확장) ---
+        const initialProjects = [
+          {
+            id: "SDI-2026-G01",
+            name: "해양경찰청 3,000톤급 친환경 하이브리드 대형 경비함 건조 사업",
+            status: "Under Construction",
+            hullNo: "CG-3001",
+            shipType: "경비함 (하이브리드)",
+            dwt: "1,800 mt",
+            gt: "3,000 gt",
+            size: "3,000",
+            unit: "GT",
+            cgt: "7,200 cgt",
+            deliveryDate: "2027-11-15",
+            shipyard: "HJ중공업 (중소형 방산야드)",
+            yardStatus: "Keel Laid (기골 거치 단계 완료)",
+            contractDate: "2025-06-15",
+            company: "대한민국 해양경찰청",
+            groupCompany: "해양경찰청",
+            client: "해양경찰청 정비창 함정조선과",
+            orderValue: "85400000000",
+            currency: "KRW",
+            altFuelType: "MGO + Lithium Battery Hybrid System",
+            scrubberStatus: "None",
+            ecoEngine: "MTU 20V4000M93L + ABB Shaft Generator & Power Take-In (PTI)",
+            announcementNo: "202506-11245-00",
+            confidenceScore: 99,
+            verificationStatus: "VERIFIED",
+            sourceType: "G2B",
+            aiSummary: "해양경찰청 공식 함정 획득 예산에 기반한 대형 경비함 하이브리드 건조 건입니다. 조달청 나라장터 낙찰 및 HJ중공업 정식 야드 배정 정보를 통해 실재성이 100% 검증되었습니다.",
+            aiReasoning: {
+              g2bCrossCheck: true,
+              officialSourceVerify: true,
+              realProjectCheck: true,
+              duplicateCheck: true,
+              detailText: "나라장터 공고번호 202506-11245-00 계약정보 및 국회 의결 해경 함정 현대화 예산안 매칭을 통해 중복 없이 실시간 업데이트되었습니다."
+            },
+            history: [
+              { id: "h1_1", date: "2025-06-15", action: "조달 정식 낙찰 및 계약", detail: "HJ중공업 수주 확정, 기본 설계 검토 착수" },
+              { id: "h1_2", date: "2026-02-10", action: "기골 거치 (Keel Laying)", detail: "HJ중공업 영도조선소 1도크 거치 완료" }
+            ],
+            sources: [
+              { id: "s1_1", title: "해양경찰청 대형 경비함 하이브리드 시스템 입찰서", publisher: "조달청 나라장터", url: "https://g2b.go.kr", date: "2025-06-15", type: "G2B" }
+            ]
+          },
+          {
+            id: "SDI-2026-G02",
+            name: "소방청 경기재난본부 500톤급 고성능 하이브리드 소방정 건조 (드라이브 비상!)",
+            status: "On Order",
+            hullNo: "FB-502",
+            shipType: "소방정 (하이브리드)",
+            dwt: "250 mt",
+            gt: "500 gt",
+            size: "500",
+            unit: "GT",
+            cgt: "1,800 cgt",
+            deliveryDate: "2026-10-15",
+            shipyard: "강남조선 (중소형 특수선 야드)",
+            yardStatus: "Contracted (상세 설계 최종 도면 승인)",
+            contractDate: "2025-10-10",
+            company: "경기도 소방재난본부",
+            groupCompany: "소방청",
+            client: "경기 소방 특수구조단",
+            orderValue: "14800000000",
+            currency: "KRW",
+            altFuelType: "Diesel-Electric Hybrid (Battery Integrated)",
+            scrubberStatus: "None",
+            ecoEngine: "Cummins QSK50-DM + ABB Compact Multidrive DCS880",
+            announcementNo: "202509-08732-00",
+            confidenceScore: 95,
+            verificationStatus: "VERIFIED",
+            sourceType: "G2B",
+            aiSummary: "소방청 국고 보조금 및 지자체 매칭 펀드가 적용된 고사양 전동화 소방정입니다. 납기 기한이 2026년 10월로 매우 촉박하여, ABB 추진 드라이브 발주가 긴급 가동되어야 합니다.",
+            aiReasoning: {
+              g2bCrossCheck: true,
+              officialSourceVerify: true,
+              realProjectCheck: true,
+              duplicateCheck: true,
+              detailText: "조달청 낙찰 고유 번호 202509-08732-00 및 소방장비 획득계획 고시를 근거로 하였으며, 드라이브 제작 리드타임 4개월을 역산했을 때 즉각적인 액션이 필요합니다."
+            },
+            history: [
+              { id: "h2_1", date: "2025-10-10", action: "조달 조인식 체결", detail: "강남조선 본사 및 경기도청 관계자 서명 완료" }
+            ],
+            sources: [
+              { id: "s2_1", title: "소방청 고성능 하이브리드 소방정 조달 규격서", publisher: "조달청 나라장터", url: "https://g2b.go.kr", date: "2025-09-15", type: "G2B" }
+            ]
+          },
+          {
+            id: "SDI-2026-G03",
+            name: "전라남도청 친환경 하이브리드 특수 병원선 대체 건조 사업",
+            status: "Under Construction",
+            hullNo: "HS-511",
+            shipType: "병원선 (하이브리드)",
+            dwt: "120 mt",
+            gt: "380 gt",
+            size: "380",
+            unit: "GT",
+            cgt: "1,500 cgt",
+            deliveryDate: "2027-04-20",
+            shipyard: "대선조선 (중소형 조선소)",
+            yardStatus: "Keel Laid (블록 조립 공정 개시)",
+            contractDate: "2025-12-15",
+            company: "전라남도청",
+            groupCompany: "대한민국 지자체",
+            client: "전남도 보건복지국 보건위생과",
+            orderValue: "12500000000",
+            currency: "KRW",
+            altFuelType: "LPG + Battery Hybrid Propulsion System",
+            scrubberStatus: "None",
+            ecoEngine: "Hyundai-Himsen LPG DF + Lithium-Ion Battery System",
+            announcementNo: "202511-04321-00",
+            confidenceScore: 92,
+            verificationStatus: "VERIFIED",
+            sourceType: "G2B",
+            aiSummary: "도서 지역 주민들의 의료 지원용으로 발주된 국내 최초 LPG 하이브리드 시스템 하이테크 병원선입니다. 대선조선 영도 야드에서 활발히 공정 진행 중입니다.",
+            aiReasoning: {
+              g2bCrossCheck: true,
+              officialSourceVerify: true,
+              realProjectCheck: true,
+              duplicateCheck: true,
+              detailText: "전남도 보도 고시 제2025-341호 친환경 병원선 건조 예산 편성 및 나라장터 수주 데이터가 일치함을 확인했습니다."
+            },
+            history: [
+              { id: "h3_1", date: "2025-12-15", action: "조달 최종 계약 체결", detail: "대선조선 수주 가동 및 가스 하이브리드 엔진 스펙 결정" }
+            ],
+            sources: [
+              { id: "s3_1", title: "전라남도 친환경 병원선 대체 건조 기술 사양", publisher: "조달청 나라장터", url: "https://g2b.go.kr", date: "2025-11-30", type: "G2B" }
+            ]
+          },
+          {
+            id: "SDI-2026-G04",
+            name: "부산항만공사(BPA) 친환경 하이브리드 항만안내선 건조 (오더 임박)",
+            status: "On Order",
+            hullNo: "PA-101",
+            shipType: "항만안내선 (전동화)",
+            dwt: "80 mt",
+            gt: "250 gt",
+            size: "250",
+            unit: "GT",
+            cgt: "980 cgt",
+            deliveryDate: "2026-11-30",
+            shipyard: "동성조선 (중소형 조선소)",
+            yardStatus: "Contracted (추진 패키지 도면 검토)",
+            contractDate: "2025-05-10",
+            company: "부산항만공사 (BPA)",
+            groupCompany: "해양수산부 산하 기관",
+            client: "부산항만공사 항만운영처",
+            orderValue: "5200000000",
+            currency: "KRW",
+            altFuelType: "MGO + Lithium Ion Battery Drive",
+            scrubberStatus: "None",
+            ecoEngine: "Scania DI16 + Permanent Magnet Electric Drive System",
+            confidenceScore: 99,
+            verificationStatus: "VERIFIED",
+            sourceType: "PUBLIC",
+            aiSummary: "부산항 홍보 및 환경 모니터링을 담당할 올일렉트릭 100% 전동화 선박입니다. 7월 30일까지 ABB 배터리 추진 전용 드라이브 제어반 오더가 완료되어야 정상 납기 준수가 가능합니다.",
+            aiReasoning: {
+              g2bCrossCheck: false,
+              officialSourceVerify: true,
+              realProjectCheck: true,
+              duplicateCheck: true,
+              detailText: "BPA 연간 고시 친환경 선대 교체 플랜과 동성조선 기본 제원도면 매칭이 확인되어 높은 수준의 신뢰도를 보장합니다."
+            },
+            history: [
+              { id: "h4_1", date: "2025-05-10", action: "안내선 신조 정식 서명", detail: "동성조선 수주 설계 개시 및 ABB 배터리 패키지 스펙 인" }
+            ],
+            sources: [
+              { id: "s4_1", title: "BPA 친환경 일렉트릭 항만안내선 발주 타당성 보고서", publisher: "부산항만공사", url: "https://busanport.com", date: "2025-04-10", type: "PUBLIC" }
+            ]
+          },
+          {
+            id: "SDI-2026-G05",
+            name: "해양수산부 남해어업관리단 친환경 하이브리드 국가어업지도선 건조",
+            status: "Contracted",
+            hullNo: "SK-2605",
+            shipType: "어업지도선",
+            dwt: "1,500 mt",
+            gt: "2,000 gt",
+            size: "2,000",
+            unit: "GT",
+            cgt: "3,200 cgt",
+            deliveryDate: "2028-05-30",
+            shipyard: "삼강엠앤티 (중소형 조선소)",
+            yardStatus: "Contracted (수주 심의 진행)",
+            contractDate: "2026-06-25",
+            company: "해양수산부 남해어업관리단",
+            groupCompany: "대한민국 정부",
+            client: "남해어업관리단 행정조선과",
+            orderValue: "13500000000",
+            currency: "KRW",
+            altFuelType: "MGO + Battery Hybrid System",
+            scrubberStatus: "None",
+            ecoEngine: "Hyundai-Himsen 6H22/32G Hybrid Integrated",
+            announcementNo: "202606-19921-00",
+            confidenceScore: 88,
+            verificationStatus: "REVIEW",
+            sourceType: "G2B",
+            aiSummary: "나라장터에 최근 신규 등록된 국책 공공 관공선 입찰 건입니다. 남해어업관리단 선대 보강 사업과 삼강엠앤티의 기본 수주 매트릭스 매칭 검토 단계입니다.",
+            aiReasoning: {
+              g2bCrossCheck: true,
+              officialSourceVerify: true,
+              realProjectCheck: true,
+              duplicateCheck: false,
+              detailText: "공고번호 202606-19921-00 기반으로 사전 조사가 진행되었으며 예산 집행 한도가 최종 확정되어 검증 테이블에 업로드되었습니다."
+            },
+            history: [
+              { id: "h5_1", date: "2026-06-20", action: "나라장터 정식 공고", detail: "친환경 전동 하이브리드 추진 패키지 요구 사양 공고 개시" }
+            ],
+            sources: [
+              { id: "s5_1", title: "국가어업지도선 하이브리드 조달 입찰 명세서", publisher: "조달청", url: "https://g2b.go.kr", date: "2026-06-20", type: "G2B" }
+            ]
+          },
+          {
+            id: "SDI-2026-G06",
+            name: "울산해양경찰청 친환경 하이브리드 연안정(100톤급) 건조 사업",
+            status: "On Order",
+            hullNo: "HS-1289",
+            shipType: "연안정 (하이브리드)",
+            dwt: "110 mt",
+            gt: "95 gt",
+            size: "100",
+            unit: "ton",
+            cgt: "1,200 cgt",
+            deliveryDate: "2026-11-30",
+            shipyard: "극동조선 (중소형 특수선 야드)",
+            yardStatus: "Contracted (상세 도면 최종 승인 단계)",
+            contractDate: "2025-11-20",
+            company: "울산해양경찰청",
+            groupCompany: "해양경찰청",
+            client: "울산해양경찰청 장비관리실",
+            orderValue: "3200000000",
+            currency: "KRW",
+            altFuelType: "MGO + Lithium Battery Hybrid System",
+            scrubberStatus: "None",
+            ecoEngine: "Yanmar Medium Speed Engine + ABB Waterjet Drive Control",
+            announcementNo: "202510-12839-00",
+            confidenceScore: 90,
+            verificationStatus: "VERIFIED",
+            sourceType: "G2B",
+            aiSummary: "울산 연안 해역 정찰 및 안전 구조용 소형 하이브리드 함정입니다. 극동조선 수주 건으로 드라이브(Waterjet 변속 제어 모듈) 오더 마감일이 7월 30일로 임박했습니다.",
+            aiReasoning: {
+              g2bCrossCheck: true,
+              officialSourceVerify: true,
+              realProjectCheck: true,
+              duplicateCheck: true,
+              detailText: "해경청 100톤급 연안정 표준 하이브리드 계통도 및 극동조선 기자재 벤더 리스트 교차 검증 데이터 매치 완료."
+            },
+            history: [
+              { id: "h6_1", date: "2025-11-20", action: "조달 조인식 정식 체결", detail: "극동조선 수주 공시 및 해경청 계약 원장 연동" }
+            ],
+            sources: [
+              { id: "s6_1", title: "해양경찰청 연안정 교체 계획 사양서", publisher: "조달청 나라장터", url: "https://g2b.go.kr", date: "2025-10-30", type: "G2B" }
+            ]
+          },
+          {
+            id: "SDI-2026-G07",
+            name: "소방청 부산소방재난본부 고성능 하이브리드 다목적 소방정",
+            status: "Contracted",
+            hullNo: "FB-701",
+            shipType: "소방정 (하이브리드)",
+            dwt: "300 mt",
+            gt: "650 gt",
+            size: "650",
+            unit: "GT",
+            cgt: "2,200 cgt",
+            deliveryDate: "2027-08-30",
+            shipyard: "강남조선 (중소형 특수선 야드)",
+            yardStatus: "Contracted (설계 착수)",
+            contractDate: "2026-02-15",
+            company: "부산소방재난본부",
+            groupCompany: "소방청",
+            client: "부산 항만소방서",
+            orderValue: "16500000000",
+            currency: "KRW",
+            altFuelType: "MGO + battery Hybrid",
+            scrubberStatus: "None",
+            ecoEngine: "Caterpillar 3512E + ABB Onboard DC Grid™ Control",
+            announcementNo: "202601-09881-00",
+            confidenceScore: 96,
+            verificationStatus: "VERIFIED",
+            sourceType: "G2B",
+            aiSummary: "부산항 구역 고성능 화재 진압 및 구성을 담당할 다목적 소방정입니다. ABB 전력 분배 제어 시스템인 Onboard DC Grid 스펙-인 추진 타깃입니다.",
+            aiReasoning: {
+              g2bCrossCheck: true,
+              officialSourceVerify: true,
+              realProjectCheck: true,
+              duplicateCheck: true,
+              detailText: "부산시 소방 장비 현대화 교체 사업 계획 고시 예산 및 강남조선 수주 통계 교차 확인 완료."
+            },
+            history: [
+              { id: "h7_1", date: "2026-02-15", action: "조달 정식 낙찰 계약", detail: "강남조선 최종 낙찰, 전력 설계 사양 미팅 배정" }
+            ],
+            sources: [
+              { id: "s7_1", title: "다목적 고성능 소방정 신조 사업 조달 공고", publisher: "부산소방재난본부", url: "https://119.busan.go.kr", date: "2026-01-05", type: "G2B" }
+            ]
+          },
+          {
+            id: "SDI-2026-G08",
+            name: "여수광양항만공사(YGPA) 항만 정화용 친환경 하이브리드선 건조",
+            status: "On Order",
+            hullNo: "EP-208",
+            shipType: "정화선 (하이브리드)",
+            dwt: "90 mt",
+            gt: "180 gt",
+            size: "180",
+            unit: "GT",
+            cgt: "850 cgt",
+            deliveryDate: "2026-11-20", // 임박!
+            shipyard: "동성조선 (중소형 조선소)",
+            yardStatus: "Contracted (기자재 승인 도면 제출)",
+            contractDate: "2025-08-12",
+            company: "여수광양항만공사",
+            groupCompany: "해양수산부 산하 기관",
+            client: "항만정화과 운항팀",
+            orderValue: "3900000000",
+            currency: "KRW",
+            altFuelType: "MGO + Battery Hybrid Propulsion",
+            scrubberStatus: "None",
+            ecoEngine: "Yanmar 6AYM-WET + Permanent Magnet PTI Motor",
+            announcementNo: "202507-15492-00",
+            confidenceScore: 91,
+            verificationStatus: "VERIFIED",
+            sourceType: "PUBLIC",
+            aiSummary: "여수 신항 친환경 청소 및 항만 순찰 목적 특수선입니다. 납기 기한 11월 20일 기준 ABB 드라이브 발주 데드라인은 7월 20일로 오더 가동 긴급도가 높습니다.",
+            aiReasoning: {
+              g2bCrossCheck: true,
+              officialSourceVerify: true,
+              realProjectCheck: true,
+              duplicateCheck: true,
+              detailText: "광양만권 환경 정비선 대체 계획 및 동성조선 엔지니어링 파트 전기 도면 인터페이스 조율 완료."
+            },
+            history: [
+              { id: "h8_1", date: "2025-08-12", action: "조달 낙찰 및 본계약", detail: "동성조선 단독 응찰 최종 계약 수립" }
+            ],
+            sources: [
+              { id: "s8_1", title: "여수광양항 친환경 청항선 대체 건조 조달 사양서", publisher: "조달청 나라장터", url: "https://g2b.go.kr", date: "2025-07-10", type: "G2B" }
+            ]
+          },
+          {
+            id: "SDI-2026-G09",
+            name: "해양수산부 서해어업관리단 대형 국가어업지도선(2,000톤급) 건조",
+            status: "Under Construction",
+            hullNo: "SK-2609",
+            shipType: "어업지도선",
+            dwt: "1,200 mt",
+            gt: "2,000 gt",
+            size: "2,000",
+            unit: "GT",
+            cgt: "4,100 cgt",
+            deliveryDate: "2028-03-31",
+            shipyard: "삼강엠앤티 (중소형 조선소)",
+            yardStatus: "Keel Laid (선각 조립 가동 중)",
+            contractDate: "2025-09-22",
+            company: "해양수산부 서해어업관리단",
+            groupCompany: "대한민국 정부",
+            client: "서해어업관리단 목포 정비실",
+            orderValue: "14200000000",
+            currency: "KRW",
+            altFuelType: "MGO + Battery Hybrid Propulsion",
+            scrubberStatus: "None",
+            ecoEngine: "MAN 8L21/31 + Hybrid PMS Power Pack",
+            announcementNo: "202508-09931-00",
+            confidenceScore: 98,
+            verificationStatus: "VERIFIED",
+            sourceType: "G2B",
+            aiSummary: "서해 배타적 경제수역 영해 수호를 위한 대형 친환경 관공선 건조 건입니다. 삼강 고성 야드에서 정밀 선체 용접 및 조립 가동 단계입니다.",
+            aiReasoning: {
+              g2bCrossCheck: true,
+              officialSourceVerify: true,
+              realProjectCheck: true,
+              duplicateCheck: true,
+              detailText: "정부 서해 단속 전담선 확충 프로젝트 예산 집행 내역과 조달청 삼강 계약 대조 완료."
+            },
+            history: [
+              { id: "h9_1", date: "2025-09-22", action: "조달 최종 낙찰 서명", detail: "삼강엠앤티 계약서 정식 조인" }
+            ],
+            sources: [
+              { id: "s9_1", title: "서해 관리단 대형 하이브리드 지도선 입찰 공고", publisher: "조달청", url: "https://g2b.go.kr", date: "2025-08-15", type: "G2B" }
+            ]
+          },
+          {
+            id: "SDI-2026-G10",
+            name: "인천해양경찰청 500톤급 친환경 전동 하이브리드 경비정 2척 건조 사업",
+            status: "On Order",
+            hullNo: "CG-508",
+            shipType: "경비정 (하이브리드)",
+            dwt: "350 mt",
+            gt: "500 gt",
+            size: "500",
+            unit: "GT",
+            cgt: "2,800 cgt",
+            deliveryDate: "2027-02-28", // 주문 마감: 2026-10-28
+            shipyard: "HJ중공업",
+            yardStatus: "Contracted (기본 설계 검토 진행 중)",
+            contractDate: "2025-12-10",
+            company: "인천해양경찰청",
+            groupCompany: "해양경찰청",
+            client: "인천해경 보급 정비과",
+            orderValue: "29500000000",
+            currency: "KRW",
+            altFuelType: "Diesel-Electric Hybrid (PTI System)",
+            scrubberStatus: "None",
+            ecoEngine: "MTU 16V4000 + ABB Waterjet Inverter Drive system",
+            announcementNo: "202511-09812-00",
+            confidenceScore: 94,
+            verificationStatus: "VERIFIED",
+            sourceType: "G2B",
+            aiSummary: "인천 서해 북방한계선 접경 해역 기동 순찰을 전담할 고속 하이브리드 경비정 건조 건입니다. ABB 워터젯 인버터 구동반 영업 진행 중입니다.",
+            aiReasoning: {
+              g2bCrossCheck: true,
+              officialSourceVerify: true,
+              realProjectCheck: true,
+              duplicateCheck: true,
+              detailText: "해양경찰 중형 전동화 함정 건조 소요 기획서 연동을 통해 중복 제거 매칭 완료."
+            },
+            history: [
+              { id: "h10_1", date: "2025-12-10", action: "조달청 정식 낙찰 및 계약", detail: "HJ중공업 2척 일괄 수주 계약 정식 체결" }
+            ],
+            sources: [
+              { id: "s10_1", title: "인천 해경 친환경 중형 경비정 건조 사양 공고", publisher: "조달청", url: "https://g2b.go.kr", date: "2025-11-01", type: "G2B" }
+            ]
+          }
+        ];
+
+        // --- 5대 수집 핵심 채널 현황 모델 데이터 ---
+        const scrapChannelsList = [
+          {
+            id: "g2b_scrap",
+            name: "조달청 나라장터 (G2B) API 채널",
+            targetUrl: "https://g2b.go.kr/ep/menu/selectMenu.do",
+            method: "XML/JSON OpenAPI & Crawler Parsing",
+            frequency: "매 3시간 주기 자동 동기화",
+            status: "ACTIVE",
+            lastRun: "2026-06-30 09:15",
+            color: "amber"
+          },
+          {
+            id: "kCG_scrap",
+            name: "해양경찰청 함정조달 기획망",
+            targetUrl: "https://kcg.go.kr/kcg/na/ntt/selectNttList.do",
+            method: "HTML BeautifulSoup Scraping & PDF Parser",
+            frequency: "매일 오전 08:00 스케줄러",
+            status: "ACTIVE",
+            lastRun: "2026-06-30 08:00",
+            color: "blue"
+          },
+          {
+            id: "nfa_scrap",
+            name: "소방청 장비도입 지능 포털",
+            targetUrl: "https://nfa.go.kr/nfa/release/equipment",
+            method: "Government Gazette RSS Feed Tracking",
+            frequency: "매주 월요일 정밀 스캔",
+            status: "ACTIVE",
+            lastRun: "2026-06-29 14:00",
+            color: "red"
+          },
+          {
+            id: "public_body_scrap",
+            name: "해양수산부 및 항만공사(BPA/IPA) 고시",
+            targetUrl: "https://mof.go.kr/iframe/mof/noticeList.do",
+            method: "Public Policy PDF Structure Analysis Engine",
+            frequency: "실시간 정책 업데이트 탐지",
+            status: "ACTIVE",
+            lastRun: "2026-06-30 11:00",
+            color: "purple"
+          },
+          {
+            id: "shipyards_mid",
+            name: "중소형 조선사 IR/공시 채널",
+            targetUrl: "https://hjsc.co.kr, https://daesunship.co.kr",
+            method: "Corporate Announcement DOM Scraper",
+            frequency: "매 6시간 주기 트래킹",
+            status: "ACTIVE",
+            lastRun: "2026-06-30 06:12",
+            color: "emerald"
+          }
+        ];
+
+        // 무제한 동적 데이터 축적 테스트를 위한 예비 데이터 풀 (수집 기동 시 랜덤으로 append됨)
+        const additionalDynamicProjects = [
+          {
+            id: "SDI-2026-D11",
+            name: "인천항만공사(IPA) 하이브리드 친환경 순찰선 대체 건조 사업",
+            status: "On Order",
+            hullNo: "IPA-501",
+            shipType: "순찰선 (하이브리드)",
+            dwt: "95 mt",
+            gt: "220 gt",
+            size: "220",
+            unit: "GT",
+            cgt: "920 cgt",
+            deliveryDate: "2026-10-30", // 주문 마감: 2026-06-30 (초긴박!)
+            shipyard: "대선조선",
+            yardStatus: "Contracted",
+            contractDate: "2025-11-15",
+            company: "인천항만공사",
+            groupCompany: "해양수산부",
+            client: "인천항 물류순찰과",
+            orderValue: "4900000000",
+            currency: "KRW",
+            altFuelType: "MGO + battery Hybrid",
+            scrubberStatus: "None",
+            ecoEngine: "Volvo Penta D16 + Eco Battery System",
+            announcementNo: "202510-14902-00",
+            confidenceScore: 93,
+            verificationStatus: "VERIFIED",
+            sourceType: "PUBLIC",
+            aiSummary: "인천 신항 연안 해상 물류 순찰 목적의 전동화 순찰선입니다. 드라이브 오더 기한이 극도로 임박해 즉각 제안 협상이 필요합니다.",
+            aiReasoning: { g2bCrossCheck: true, officialSourceVerify: true, realProjectCheck: true, duplicateCheck: true, detailText: "IPA 선대 개편 예산 및 대선 영도 조선소 도면 인터페이스 확인 완료" },
+            history: [{ id: "hd1", date: "2025-11-15", action: "조달 서명 조인", detail: "대선조선 수주 엔지니어링 준비" }],
+            sources: [{ id: "sd1", title: "인천항 순찰선 건조 조달 계약안", publisher: "나라장터", url: "https://g2b.go.kr", date: "2025-10-10", type: "G2B" }]
+          },
+          {
+            id: "SDI-2026-D12",
+            name: "한국조선해양기자재연구원(KOMERI) 자율운항 고속 테스트 플랫폼정",
+            status: "Contracted",
+            hullNo: "KM-208",
+            shipType: "연구용 시험선",
+            dwt: "50 mt",
+            gt: "150 gt",
+            size: "150",
+            unit: "GT",
+            cgt: "880 cgt",
+            deliveryDate: "2027-05-15",
+            shipyard: "극동조선",
+            yardStatus: "Contracted",
+            contractDate: "2026-03-10",
+            company: "한국조선해양기자재연구원",
+            groupCompany: "산업통상자원부",
+            client: "KOMERI 전동화연구센터",
+            orderValue: "3400000000",
+            currency: "KRW",
+            altFuelType: "Pure Battery Electric",
+            scrubberStatus: "None",
+            ecoEngine: "ABB Permanent Magnet motor + Drive Panel System",
+            announcementNo: "202602-12492-00",
+            confidenceScore: 91,
+            verificationStatus: "VERIFIED",
+            sourceType: "PUBLIC",
+            aiSummary: "KASS 실증 사업 일환으로 국내 최초 중소형 완전 전동화 자율운항 테스트 플랫폼정 건조 건입니다.",
+            aiReasoning: { g2bCrossCheck: true, officialSourceVerify: true, realProjectCheck: true, duplicateCheck: true, detailText: "산자부 국가 R&D 연구선 확충 계획 및 극동조선 수주 실적 대조 완료" },
+            history: [{ id: "hd2", date: "2026-03-10", action: "조달 계약 확정", detail: "극동조선 영도 야드 빌딩 승인" }],
+            sources: [{ id: "sd2", title: "전동화 자율운항 연구선 건조 사양 공고", publisher: "조달청", url: "https://g2b.go.kr", date: "2026-02-10", type: "G2B" }]
+          },
+          {
+            id: "SDI-2026-D13",
+            name: "여수소방서 남해 전용 고성능 화학 하이브리드 구조정",
+            status: "On Order",
+            hullNo: "YS-FB-3",
+            shipType: "소방정 (하이브리드)",
+            dwt: "180 mt",
+            gt: "400 gt",
+            size: "400",
+            unit: "GT",
+            cgt: "1,950 cgt",
+            deliveryDate: "2027-03-25",
+            shipyard: "강남조선",
+            yardStatus: "Contracted",
+            contractDate: "2025-12-05",
+            company: "전남소방본부",
+            groupCompany: "소방청",
+            client: "여수소방서 화학구조대",
+            orderValue: "11900000000",
+            currency: "KRW",
+            altFuelType: "Diesel-Electric Hybrid PTI",
+            scrubberStatus: "None",
+            ecoEngine: "Cummins KTA38 + Multi-Drive propulsion system",
+            announcementNo: "202511-03991-00",
+            confidenceScore: 89,
+            verificationStatus: "VERIFIED",
+            sourceType: "G2B",
+            aiSummary: "여수 국가 산업단지 인근 해상 화학 방재 및 대형 인명 구조 전담 소방정입니다.",
+            aiReasoning: { g2bCrossCheck: true, officialSourceVerify: true, realProjectCheck: true, duplicateCheck: true, detailText: "전남 소방본부 특수 장비 예산 조달 및 강남조선 상세 스펙 검증" },
+            history: [{ id: "hd3", date: "2025-12-05", action: "계약 체결", detail: "강남조선 설계 기술 사양 조율" }],
+            sources: [{ id: "sd3", title: "여수 화학구조정 신조 조달 계약서", publisher: "조달청", url: "https://g2b.go.kr", date: "2025-11-10", type: "G2B" }]
+          }
+        ];
+
+        // --- Helper Functions (Globally declared to prevent Alpine evaluation race conditions) ---
+        const calculateOrderWindow = (deliveryDateStr) => {
+          if (!deliveryDateStr) {
+            return {
+              deadlineDateStr: "-",
+              monthsLeft: 0,
+              isOverdue: false,
+              isUrgent: false
+            };
+          }
+          const currentDate = new Date("2026-06-29");
+          const deliveryDate = new Date(deliveryDateStr);
+          
+          // 드라이브 제작을 위해 최소 4개월 전에 주문 필수
+          const orderDeadline = new Date(deliveryDate);
+          orderDeadline.setMonth(orderDeadline.getMonth() - 4);
+          
+          const diffTime = orderDeadline.getTime() - currentDate.getTime();
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          const diffMonths = parseFloat((diffDays / 30.4).toFixed(1));
+          
+          return {
+            deadlineDateStr: orderDeadline.toISOString().split("T")[0],
+            monthsLeft: diffMonths,
+            isOverdue: diffMonths <= 0,
+            isUrgent: diffMonths > 0 && diffMonths <= 3
+          };
+        };
+
+        // --- Alpine.js Application Component Constructor ---
+        function sdiApp() {
+          return {
+            projects: [],
+            channels: [],
+            searchTerm: '',
+            filterSourceType: 'ALL',
+            filterStatus: 'ALL',
+            filterDriveStatus: 'ALL', // ABB 오더 상태별 전용 필터 탭 (추가 요건)
+            selectedProject: null,
+            isDemoMode: true,
+            deliverySortOrder: 'NONE', // 납기일 정렬
+            confidenceSortOrder: 'NONE', // 신뢰도 정렬
+            valueSortOrder: 'NONE', // 예산/금액 정렬
+            viewMode: 'grid', // 'grid' | 'table' (대용량 시인성을 위한 뷰 모드 토글)
+            isThinking: false,
+            thinkingStep: 0,
+            thinkingLogs: [],
+            toastMessage: null,
+
+            init() {
+              this.projects = initialProjects;
+              this.channels = scrapChannelsList;
+              this.fetchLatestProjects();
+
+              // Watchers to trigger Lucide icon creation after state changes
+              this.$watch('searchTerm', () => this.$nextTick(() => lucide.createIcons()));
+              this.$watch('filterSourceType', () => this.$nextTick(() => lucide.createIcons()));
+              this.$watch('filterStatus', () => this.$nextTick(() => lucide.createIcons()));
+              this.$watch('filterDriveStatus', () => this.$nextTick(() => lucide.createIcons()));
+              this.$watch('deliverySortOrder', () => this.$nextTick(() => lucide.createIcons()));
+              this.$watch('confidenceSortOrder', () => this.$nextTick(() => lucide.createIcons()));
+              this.$watch('valueSortOrder', () => this.$nextTick(() => lucide.createIcons()));
+              this.$watch('selectedProject', () => this.$nextTick(() => lucide.createIcons()));
+              this.$watch('viewMode', () => this.$nextTick(() => lucide.createIcons()));
+              
+              this.$nextTick(() => {
+                lucide.createIcons();
+              });
+            },
+
+            async fetchLatestProjects() {
+              try {
+                const response = await fetch("http://localhost:8000/api/projects");
+                if (response.ok) {
+                  const data = await response.json();
+                  this.projects = data;
+                  this.isDemoMode = false;
+                  this.triggerToast("백엔드 서버 연동 성공! 실시간 조달청 DB를 수집했습니다.");
+                } else {
+                  throw new Error("서버 에러");
+                }
+              } catch (error) {
+                this.projects = initialProjects;
+                this.isDemoMode = true;
+                console.log("백엔드 서버 오프라인으로 수집 시뮬레이션 데이터를 로드합니다.");
+              }
+            },
+
+            triggerToast(msg) {
+              this.toastMessage = msg;
+              this.$nextTick(() => lucide.createIcons());
+              setTimeout(() => {
+                this.toastMessage = null;
+              }, 3500);
+            },
+
+            // 정렬 토글 핸들러 통합화
+            toggleSort(sortType) {
+              if (sortType === 'delivery') {
+                this.confidenceSortOrder = 'NONE';
+                this.valueSortOrder = 'NONE';
+                if (this.deliverySortOrder === 'NONE') this.deliverySortOrder = 'ASC';
+                else if (this.deliverySortOrder === 'ASC') this.deliverySortOrder = 'DESC';
+                else this.deliverySortOrder = 'NONE';
+                this.triggerToast(`납기일 기준 정렬이 변경되었습니다.`);
+              } else if (sortType === 'confidence') {
+                this.deliverySortOrder = 'NONE';
+                this.valueSortOrder = 'NONE';
+                if (this.confidenceSortOrder === 'NONE') this.confidenceSortOrder = 'DESC'; // 높은순 먼저
+                else if (this.confidenceSortOrder === 'DESC') this.confidenceSortOrder = 'ASC';
+                else this.confidenceSortOrder = 'NONE';
+                this.triggerToast(`AI 신뢰도 점수 기준 정렬이 변경되었습니다.`);
+              } else if (sortType === 'value') {
+                this.deliverySortOrder = 'NONE';
+                this.confidenceSortOrder = 'NONE';
+                if (this.valueSortOrder === 'NONE') this.valueSortOrder = 'DESC'; // 비싼순 먼저
+                else if (this.valueSortOrder === 'DESC') this.valueSortOrder = 'ASC';
+                else this.valueSortOrder = 'NONE';
+                this.triggerToast(`계약 예산 규모 기준 정렬이 변경되었습니다.`);
+              }
+            },
+
+            // 개별 수집 채널 테스트 시 가상 풀에서 동적으로 데이터를 생성해 무제한 누적 축적시킴
+            testSingleChannelScrap(channelId, channelName) {
+              this.triggerToast(`[수집 기동] '${channelName}' 채널에 즉시 파싱 쿼리를 송출합니다...`);
+              
+              setTimeout(() => {
+                this.channels = this.channels.map(ch => {
+                  if (ch.id === channelId) {
+                    return {
+                      ...ch,
+                      lastRun: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                      status: "ACTIVE"
+                    };
+                  }
+                  return ch;
+                });
+
+                // 무제한 데이터 적재 테스트 (랜덤 선택해 누적 추가)
+                const randIndex = Math.floor(Math.random() * additionalDynamicProjects.length);
+                const sourceProj = additionalDynamicProjects[randIndex];
+                
+                // 중복 방지를 위한 고유 ID 처리
+                const newId = "SDI-2026-DYN-" + Math.floor(Math.random() * 1000000);
+                const uniqueProj = {
+                  ...sourceProj,
+                  id: newId,
+                  hullNo: "H-DYN" + Math.floor(Math.random() * 900 + 100),
+                  name: `[수집추가] ${sourceProj.name}`
+                };
+
+                this.projects.unshift(uniqueProj); // 대시보드 리스트의 맨 위에 동적 추가
+                this.triggerToast(`'${channelName}' 수집 완료! 신규 선박 '${uniqueProj.name}' 이(가) 리스트에 추가되었습니다.`);
+              }, 1800);
+            },
+
+            async runAiThinking() {
+              this.isThinking = true;
+              this.thinkingStep = 0;
+              this.thinkingLogs = [];
+              
+              const steps = [
+                "나라장터(G2B) 소방청, 해경청, 지자체 관공선 채널 스캔 개시...",
+                "수집된 각 신조 발주 사양 HTML DOM 파싱 및 지능화 추출 가동...",
+                "중소형 조선사(HJ중공업, 대선조선, 강남조선, 극동조선 등) 수주 잔고 동기화 완료...",
+                "Clarksons Standard 데이터 규격(Dwt, GT, CGT, Fuel 타입 등) 매핑 필터 통과...",
+                "ABB Drive 제작 기간 리드타임(납기 - 4개월) 데드라인 연산 및 동적 통합 완료!"
+              ];
+
+              let current = 0;
+              const interval = setInterval(() => {
+                if (current < steps.length) {
+                  this.thinkingLogs.push(steps[current]);
+                  this.thinkingStep = current + 1;
+                  current++;
+                } else {
+                  clearInterval(interval);
+                  
+                  fetch("http://localhost:8000/api/collect", { method: "POST" })
+                    .then(res => {
+                      if (res.ok) {
+                        this.fetchLatestProjects();
+                      } else {
+                        // 오프라인 상황일 경우 에비 데이터 풀에서 대량 추가
+                        additionalDynamicProjects.forEach(item => {
+                          const exist = this.projects.some(p => p.id === item.id);
+                          if (!exist) {
+                            this.projects.unshift(item);
+                          }
+                        });
+                        this.triggerToast("AI 분석 완료! 신규 하이브리드 관공선 정보들이 데이터베이스에 적량 수집되었습니다.");
+                      }
+                    })
+                    .catch(() => {
+                      // 수집 기동시 로컬 리스트에 데이터 전원 주입
+                      additionalDynamicProjects.forEach(item => {
+                        const exist = this.projects.some(p => p.id === item.id);
+                        if (!exist) {
+                          this.projects.unshift(item);
+                        }
+                      });
+                      this.triggerToast("AI 분석 완료! 데모용 데이터베이스에 신규 하이브리드 프로젝트 3건이 갱신되었습니다.");
+                    });
+
+                  this.isThinking = false;
+                }
+              }, 1200);
+            },
+
+            filteredAndSortedProjects() {
+              const filtered = this.projects.filter(p => {
+                const matchesSearch = 
+                  p.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                  p.client.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                  p.shipyard.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                  p.shipType.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                  p.hullNo.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                  p.company.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                  p.altFuelType.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                  (p.announcementNo && p.announcementNo.includes(this.searchTerm));
+                  
+                const matchesSource = this.filterSourceType === "ALL" || p.sourceType === this.filterSourceType;
+                const matchesStatus = this.filterStatus === "ALL" || p.verificationStatus === this.filterStatus;
+
+                // ABB 드라이브 발주 상태별 필터 조건 적용
+                const orderState = calculateOrderWindow(p.deliveryDate);
+                let matchesDrive = true;
+                if (this.filterDriveStatus === 'OVERDUE') {
+                  matchesDrive = orderState.isOverdue;
+                } else if (this.filterDriveStatus === 'URGENT') {
+                  matchesDrive = orderState.isUrgent;
+                } else if (this.filterDriveStatus === 'SAFE') {
+                  matchesDrive = !orderState.isOverdue && !orderState.isUrgent;
+                }
+
+                return matchesSearch && matchesSource && matchesStatus && matchesDrive;
+              });
+
+              // 다중 정렬 알고리즘 적용
+              if (this.deliverySortOrder !== "NONE") {
+                return filtered.sort((a, b) => {
+                  const dateA = new Date(a.deliveryDate).getTime();
+                  const dateB = new Date(b.deliveryDate).getTime();
+                  return this.deliverySortOrder === "ASC" ? dateA - dateB : dateB - dateA;
+                });
+              }
+
+              if (this.confidenceSortOrder !== "NONE") {
+                return filtered.sort((a, b) => {
+                  return this.confidenceSortOrder === "ASC" 
+                    ? a.confidenceScore - b.confidenceScore 
+                    : b.confidenceScore - a.confidenceScore;
+                });
+              }
+
+              if (this.valueSortOrder !== "NONE") {
+                return filtered.sort((a, b) => {
+                  const valA = parseFloat(a.orderValue);
+                  const valB = parseFloat(b.orderValue);
+                  return this.valueSortOrder === "ASC" ? valA - valB : valB - valA;
+                });
+              }
+
+              return filtered;
+            },
+
+            calculateOrderWindow(deliveryDateStr) {
+              return calculateOrderWindow(deliveryDateStr);
+            }
+          };
+        }
+    </script>
+
+    <!-- Alpine.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+        }
+        [x-cloak] { display: none !important; }
+        .animate-scaleUp {
+            animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes scaleUp {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-[#F8F9FA] text-[#222222] min-h-screen flex flex-col" x-data="sdiApp()" x-init="init()">
+
+    <!-- Toast Notification (ABB Red & Slate Accent) -->
+    <div x-show="toastMessage" 
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 transform translate-y-2"
+         x-transition:enter-end="opacity-100 transform translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 transform translate-y-0"
+         x-transition:leave-end="opacity-0 transform translate-y-2"
+         class="fixed top-5 right-5 z-50 bg-[#232323] text-white backdrop-blur px-5 py-3 rounded-xl shadow-xl border border-slate-700/50 flex items-center gap-2"
+         style="display: none;">
+        <i data-lucide="check-circle-2" class="text-emerald-400 w-5 h-5"></i>
+        <span class="text-sm font-semibold" x-text="toastMessage"></span>
+    </div>
+
+    <!-- Header (ABB Signature: Bold Black line with ABB Red accent) -->
+    <header class="sticky top-0 z-30 bg-[#232323] text-white border-b-4 border-[#E0001A] px-6 py-4 flex items-center justify-between shadow-md">
+        <div class="flex items-center gap-3">
+            <div class="bg-[#E0001A] text-white p-2.5 rounded shadow-md">
+                <i data-lucide="cpu" class="animate-pulse w-6 h-6"></i>
+            </div>
+            <div>
+                <span class="text-[10px] uppercase tracking-wider font-extrabold text-[#E0001A] block">
+                    ABB Ability™ <span x-text="isDemoMode ? '[SIMULATOR MODE]' : '[SECURE NETWORK ACTIVE]'"></span>
+                </span>
+                <h1 class="text-lg font-extrabold tracking-tight">Ship Delivery Intelligence (SDI)</h1>
+            </div>
+        </div>
+
+        <!-- AI Action Button (ABB Action Style) -->
+        <button
+            @click="runAiThinking()"
+            :disabled="isThinking"
+            class="flex items-center gap-2 px-5 py-2.5 bg-[#E0001A] hover:bg-[#C00016] disabled:bg-gray-600 text-white text-sm font-bold rounded shadow transition duration-200"
+        >
+            <i data-lucide="zap" class="w-4 h-4"></i>
+            <span x-text="isThinking ? 'AI 데이터 연동 분석 중...' : '오늘 데이터 수집 및 검증'"></span>
+        </button>
+    </header>
+
+    <!-- Main Layout -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6">
+        
+        <!-- Statistics Dashboard Row (ABB Ability Dashboard Layout) -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white rounded-xl border border-gray-200/80 p-5 shadow-sm border-l-4 border-slate-700">
+                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">전체 관리 프로젝트</div>
+                <div class="text-2xl font-black text-slate-800 mt-1" x-text="projects.length + '건'"></div>
+                <div class="text-[10px] text-slate-500 font-semibold mt-1">▲ G2B / 공공 조달 실시간 갱신</div>
+            </div>
+            <div class="bg-white rounded-xl border border-gray-200/80 p-5 shadow-sm border-l-4 border-[#E0001A]">
+                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">드라이브 기한 초과 (Overdue)</div>
+                <div class="text-2xl font-black text-[#E0001A] mt-1">
+                    <span x-text="projects.filter(p => calculateOrderWindow(p.deliveryDate).isOverdue).length + '건'"></span>
+                </div>
+                <div class="text-[10px] text-rose-500 font-semibold mt-1">🚨 리드타임 비상 / 엔지니어링 즉시 가동</div>
+            </div>
+            <div class="bg-white rounded-xl border border-gray-200/80 p-5 shadow-sm border-l-4 border-amber-500">
+                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">주문 임박 (3개월 내)</div>
+                <div class="text-2xl font-black text-amber-500 mt-1">
+                    <span x-text="projects.filter(p => calculateOrderWindow(p.deliveryDate).isUrgent).length + '건'"></span>
+                </div>
+                <div class="text-[10px] text-amber-500 font-semibold mt-1">ABB RFQ 기술 스펙 가이드 제출 대상</div>
+            </div>
+            <div class="bg-white rounded-xl border border-gray-200/80 p-5 shadow-sm border-l-4 border-emerald-500">
+                <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">액티브 수집 채널 가동률</div>
+                <div class="text-2xl font-black text-emerald-600 mt-1">
+                    <span x-text="channels.filter(c => c.status === 'ACTIVE').length"></span> / <span x-text="channels.length"></span>
+                </div>
+                <div class="text-[10px] text-emerald-500 font-semibold mt-1">실시간 파싱 채널 100% 정상 작동</div>
+            </div>
+        </div>
+
+        <!-- Business Rule Banner -->
+        <div class="bg-red-50 border-l-4 border-[#E0001A] rounded-r-xl p-4 flex items-start gap-3">
+            <i data-lucide="alert-circle" class="text-[#E0001A] shrink-0 mt-0.5 w-5 h-5"></i>
+            <div class="text-xs text-slate-800 leading-relaxed">
+                <span class="font-bold text-[#E0001A]">💡 ABB Drive 기술영업 비즈니스 룰 알림:</span> 드라이브 제품은 제작 및 엔지니어링 리드타임을 고려하여 **선박 납기일자 최소 4개월 전**에는 반드시 최종 주문(Order)이 체결되어야 합니다. 각 프로젝트의 카드 및 상세 보기에서 남은 주문 가능 기간을 상시 모니터링하십시오.
+            </div>
+        </div>
+
+        <!-- AI Thinking Console -->
+        <div x-show="isThinking" 
+             x-transition:enter="transition ease-out duration-300"
+             class="bg-[#232323] text-slate-200 rounded-xl border border-slate-800 p-6 shadow-xl space-y-4"
+             style="display: none;">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="cpu" class="text-[#E0001A] animate-spin w-5 h-5"></i>
+                    <h3 class="text-sm font-semibold text-slate-100">AI Thinking Mode: 중소형 관공선 / 나라장터 / 부처 예산 매핑</h3>
+                </div>
+                <span class="text-xs text-[#E0001A] font-mono font-semibold">Step <span x-text="thinkingStep"></span>/5</span>
+            </div>
+            <div class="space-y-2 font-mono text-xs">
+                <template x-for="(log, index) in thinkingLogs" :key="index">
+                    <div class="flex items-start gap-2 text-slate-300">
+                        <span class="text-[#E0001A]">✓</span>
+                        <span x-text="log"></span>
+                    </div>
+                </template>
+                <div class="h-2 w-full bg-slate-800 rounded-full overflow-hidden mt-3">
+                    <div class="h-full bg-[#E0001A] transition-all duration-500" :style="'width: ' + ((thinkingStep/5)*100) + '%'"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Split Grid for Crawler Controller & Projects View -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Left Area (4-Cols): 실시간 수집 채널 컨트롤러 -->
+            <div class="lg:col-span-4 space-y-6">
+                <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm space-y-4">
+                  <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h2 class="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                      <i data-lucide="globe" class="text-[#E0001A] w-4.5 h-4.5"></i> 실시간 수집 채널 컨트롤러
+                    </h2>
+                    <span class="text-[10px] text-white bg-[#E0001A] px-2.5 py-0.5 rounded font-bold">LIVE</span>
+                  </div>
+                  
+                  <p class="text-xs text-slate-500 leading-relaxed">
+                    본 대시보드가 실제 조달청 나라장터, 해양경찰청, 소방청, 정부 부처 고시 및 중소형 조선사의 원본 데이터를 긁어와(Scraping) 정합성 있게 매핑하는 경로 목록입니다. [테스트] 버튼을 눌러 실시간 크롤링 동작 상태를 즉각 시연해볼 수 있습니다.
+                  </p>
+
+                  <div class="space-y-3">
+                    <template x-for="ch in channels" :key="ch.id">
+                      <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-2 hover:border-[#E0001A]/30 transition duration-200">
+                        <div class="flex items-center justify-between">
+                          <span class="text-xs font-bold text-slate-800" x-text="ch.name"></span>
+                          <div class="flex items-center gap-1.5">
+                            <span class="relative flex h-2 w-2">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E0001A] opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-2 w-2 bg-[#E0001A]"></span>
+                            </span>
+                            <span class="text-[10px] font-bold text-slate-500" x-text="ch.status"></span>
+                          </div>
+                        </div>
+
+                        <div class="text-[10px] text-slate-400 space-y-0.5">
+                          <div class="truncate"><strong class="font-semibold text-slate-500">타깃 URL:</strong> <span x-text="ch.targetUrl"></span></div>
+                          <div><strong class="font-semibold text-slate-500">수집 방식:</strong> <span x-text="ch.method"></span></div>
+                          <div><strong class="font-semibold text-slate-500">주기:</strong> <span x-text="ch.frequency"></span></div>
+                          <div class="text-blue-600 font-mono"><strong class="font-semibold text-slate-500">최근 실행:</strong> <span x-text="ch.lastRun"></span></div>
+                        </div>
+
+                        <button
+                          @click="testSingleChannelScrap(ch.id, ch.name)"
+                          class="w-full mt-1.5 py-1.5 border border-slate-200 hover:border-[#E0001A] hover:bg-red-50 text-slate-700 hover:text-[#E0001A] rounded text-[10px] font-bold transition duration-200"
+                        >
+                          해당 채널 즉시 크롤링 테스트 실행
+                        </button>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+            </div>
+
+            <!-- Right Area (8-Cols): 선박 수주 및 납기 프로젝트 -->
+            <div class="lg:col-span-8 space-y-6">
+                
+                <!-- Filter and Search Layout -->
+                <div class="bg-white rounded-xl border border-gray-200 p-5 shadow-sm space-y-4">
+                  <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-center">
+                    
+                    <!-- Search Input -->
+                    <div class="relative lg:col-span-3">
+                      <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4"></i>
+                      <input
+                        type="text"
+                        placeholder="조선소, 발주처, 선종 검색..."
+                        x-model="searchTerm"
+                        class="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded text-xs focus:outline-none focus:ring-1 focus:ring-[#E0001A] focus:bg-white transition"
+                      />
+                    </div>
+
+                    <!-- Source Type Filter Tabs -->
+                    <div class="flex rounded bg-slate-100 p-1 lg:col-span-3">
+                      <button @click="filterSourceType = 'ALL'" :class="filterSourceType === 'ALL' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'" class="flex-1 text-[10px] font-bold py-1 rounded transition">전체</button>
+                      <button @click="filterSourceType = 'G2B'" :class="filterSourceType === 'G2B' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'" class="flex-1 text-[10px] font-bold py-1 rounded transition">G2B</button>
+                      <button @click="filterSourceType = 'PUBLIC'" :class="filterSourceType === 'PUBLIC' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'" class="flex-1 text-[10px] font-bold py-1 rounded transition">공공</button>
+                      <button @click="filterSourceType = 'SHIPYARD'" :class="filterSourceType === 'SHIPYARD' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'" class="flex-1 text-[10px] font-bold py-1 rounded transition">야드</button>
+                    </div>
+
+                    <!-- ABB Drive Order Status Filter (새로운 필터 탭 추가) -->
+                    <div class="flex rounded bg-slate-100 p-1 lg:col-span-3">
+                      <button @click="filterDriveStatus = 'ALL'" :class="filterDriveStatus === 'ALL' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'" class="flex-1 text-[10px] font-bold py-1 rounded transition">전체오더</button>
+                      <button @click="filterDriveStatus = 'OVERDUE'" :class="filterDriveStatus === 'OVERDUE' ? 'bg-[#E0001A] text-white shadow-sm' : 'text-slate-500'" class="flex-1 text-[10px] font-bold py-1 rounded transition">Overdue</button>
+                      <button @click="filterDriveStatus = 'URGENT'" :class="filterDriveStatus === 'URGENT' ? 'bg-amber-500 text-white shadow-sm' : 'text-slate-500'" class="flex-1 text-[10px] font-bold py-1 rounded transition">Urgent</button>
+                      <button @click="filterDriveStatus = 'SAFE'" :class="filterDriveStatus === 'SAFE' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-500'" class="flex-1 text-[10px] font-bold py-1 rounded transition">Safe</button>
+                    </div>
+
+                    <!-- 뷰 모드 토글 (그리드 vs 컴팩트 테이블 뷰어) -->
+                    <div class="flex rounded border border-gray-200 p-0.5 lg:col-span-3 justify-between items-center bg-white">
+                      <button @click="viewMode = 'grid'" :class="viewMode === 'grid' ? 'bg-slate-800 text-white' : 'text-slate-500'" class="flex-1 flex justify-center py-1 rounded text-xs font-bold transition">
+                        <i data-lucide="layout-grid" class="w-3.5 h-3.5 mr-1"></i> 그리드
+                      </button>
+                      <button @click="viewMode = 'table'" :class="viewMode === 'table' ? 'bg-slate-800 text-white' : 'text-slate-500'" class="flex-1 flex justify-center py-1 rounded text-xs font-bold transition">
+                        <i data-lucide="sliders" class="w-3.5 h-3.5 mr-1"></i> 테이블
+                      </button>
+                    </div>
+
+                  </div>
+
+                  <!-- 다중 정렬 영역 고도화 (정렬 헤더 추가) -->
+                  <div class="pt-3 border-t border-slate-100 flex flex-wrap gap-2 items-center text-xs">
+                    <span class="text-slate-400 font-bold">다중 정렬 기준:</span>
+                    <button @click="toggleSort('delivery')" class="px-2.5 py-1 rounded border flex items-center gap-1 transition"
+                            :class="deliverySortOrder !== 'NONE' ? 'bg-[#E0001A] text-white border-[#E0001A]' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'">
+                      <span>선박 납기일</span>
+                      <span x-text="deliverySortOrder === 'NONE' ? '↕' : (deliverySortOrder === 'ASC' ? '▲' : '▼')"></span>
+                    </button>
+                    <button @click="toggleSort('confidence')" class="px-2.5 py-1 rounded border flex items-center gap-1 transition"
+                            :class="confidenceSortOrder !== 'NONE' ? 'bg-[#E0001A] text-white border-[#E0001A]' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'">
+                      <span>AI 신뢰도</span>
+                      <span x-text="confidenceSortOrder === 'NONE' ? '↕' : (confidenceSortOrder === 'ASC' ? '▲' : '▼')"></span>
+                    </button>
+                    <button @click="toggleSort('value')" class="px-2.5 py-1 rounded border flex items-center gap-1 transition"
+                            :class="valueSortOrder !== 'NONE' ? 'bg-[#E0001A] text-white border-[#E0001A]' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'">
+                      <span>계약 예산액</span>
+                      <span x-text="valueSortOrder === 'NONE' ? '↕' : (valueSortOrder === 'ASC' ? '▲' : '▼')"></span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Projects Display Area -->
+                
+                <!-- 1. Grid View (기존 오리지널 그리드 카드 레이아웃 보존) -->
+                <div x-show="viewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <template x-for="project in filteredAndSortedProjects()" :key="project.id">
+                    <div
+                      @click="selectedProject = project; $nextTick(() => lucide.createIcons())"
+                      class="bg-white rounded-xl border hover:shadow-lg transition-all duration-300 cursor-pointer p-5 flex flex-col justify-between group relative overflow-hidden"
+                      :class="calculateOrderWindow(project.deliveryDate).isOverdue ? 'border-rose-300 shadow-rose-50/50 hover:border-[#E0001A]' : 'border-slate-200 hover:border-slate-800'"
+                    >
+                      <div x-show="calculateOrderWindow(project.deliveryDate).isOverdue" class="absolute top-0 right-0 left-0 h-1 bg-gradient-to-r from-[#E0001A] to-red-700"></div>
+
+                      <div class="space-y-3.5">
+                        
+                        <!-- Header Tag / Badge -->
+                        <div class="flex items-center justify-between">
+                          <span class="text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider"
+                                :class="{
+                                  'bg-amber-100 text-amber-800': project.sourceType === 'G2B',
+                                  'bg-purple-100 text-purple-800': project.sourceType === 'PUBLIC',
+                                  'bg-blue-100 text-blue-800': project.sourceType === 'SHIPYARD'
+                                }">
+                            <span x-text="project.sourceType === 'G2B' ? 'G2B 나라장터 공고' : (project.sourceType === 'PUBLIC' ? '공공 부처 및 지자체' : '중소형 조선사 건조')"></span>
+                          </span>
+
+                          <span class="text-[9px] font-bold px-2 py-0.5 rounded"
+                                :class="project.verificationStatus === 'VERIFIED' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-amber-50 text-amber-800 border border-amber-200'">
+                            <span x-text="project.verificationStatus === 'VERIFIED' ? '✓ AI 검증 완료' : '⚠︎ AI 검토 필요'"></span>
+                          </span>
+                        </div>
+
+                        <!-- Name & Basic Info -->
+                        <div>
+                          <h3 class="font-bold text-slate-800 text-sm leading-snug group-hover:text-[#E0001A] transition" x-text="project.name"></h3>
+                          <div class="flex flex-wrap gap-1.5 mt-2">
+                            <span class="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-semibold font-mono">
+                              Hull: <span x-text="project.hullNo"></span>
+                            </span>
+                            <span class="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-semibold" x-text="project.shipType"></span>
+                            <span class="text-[9px] bg-red-50 text-[#E0001A] px-1.5 py-0.5 rounded font-semibold flex items-center gap-0.5">
+                              <i data-lucide="fuel" class="w-3 h-3"></i> <span x-text="project.altFuelType.split(' ')[0]"></span>
+                            </span>
+                          </div>
+                        </div>
+
+                        <!-- Drive Order Deadline Progress Component -->
+                        <div class="progressive-alert" :class="calculateOrderWindow(project.deliveryDate).isOverdue ? 'bg-rose-50 border border-rose-200 text-rose-900 p-3 rounded-xl flex flex-col gap-1' : (calculateOrderWindow(project.deliveryDate).isUrgent ? 'bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-xl flex flex-col gap-1' : 'bg-slate-50 border border-slate-100 text-slate-800 p-3 rounded-xl flex flex-col gap-1')">
+                          <div class="flex items-center justify-between text-[11px] font-bold">
+                            <span class="flex items-center gap-1">
+                              <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i> Drive 주문 마감 기한
+                            </span>
+                            <span x-text="calculateOrderWindow(project.deliveryDate).deadlineDateStr"></span>
+                          </div>
+                          
+                          <div class="flex items-center justify-between text-[10px] mt-1">
+                            <span class="opacity-80">기한까지 남은 개월수</span>
+                            <span class="font-extrabold" :class="calculateOrderWindow(project.deliveryDate).isOverdue ? 'text-rose-600 animate-pulse' : (calculateOrderWindow(project.deliveryDate).isUrgent ? 'text-amber-600' : 'text-blue-600')">
+                              <span x-text="calculateOrderWindow(project.deliveryDate).isOverdue ? '기한 초과 (' + Math.abs(calculateOrderWindow(project.deliveryDate).monthsLeft) + '개월 경과)' : calculateOrderWindow(project.deliveryDate).monthsLeft + '개월 남음'"></span>
+                            </span>
+                          </div>
+
+                          <div x-show="calculateOrderWindow(project.deliveryDate).isOverdue" class="text-[9px] text-[#E0001A] font-bold mt-1 flex items-center gap-1">
+                            <i data-lucide="alert-octagon" class="w-3 h-3"></i> ABB Drive 엔지니어링 즉시 투입 필요
+                          </div>
+                        </div>
+
+                        <!-- Key specs metadata -->
+                        <div class="space-y-1.5 border-t border-slate-100 pt-3 text-[11px]">
+                          <div class="flex items-center justify-between">
+                            <span class="text-slate-400 font-bold">발주기관 / 선주</span>
+                            <span class="font-bold text-slate-700 truncate max-w-[130px]" x-text="project.company"></span>
+                          </div>
+                          <div class="flex items-center justify-between">
+                            <span class="text-slate-400">건조 조선소</span>
+                            <span class="font-bold text-slate-800" x-text="project.shipyard"></span>
+                          </div>
+                          <div class="flex items-center justify-between">
+                            <span class="text-slate-400">제원 (Size/CGT)</span>
+                            <span class="font-medium text-slate-700">
+                              <span x-text="selectedSize = project.size"></span> <span x-text="project.unit"></span> (<span x-text="project.cgt.split(' ')[0]"></span>)
+                            </span>
+                          </div>
+                          <div class="flex items-center justify-between">
+                            <span class="text-slate-400">계약금액 / 신조가</span>
+                            <span class="font-extrabold text-[#E0001A]">
+                              <span x-text="project.currency === 'KRW' ? '₩ ' + (parseFloat(project.orderValue)/100000000).toFixed(1) + ' 억 원' : project.currency + ' $' + parseInt(project.orderValue).toLocaleString()"></span>
+                            </span>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <!-- Confidence Meter -->
+                      <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <div class="flex items-center gap-1 text-[11px]">
+                          <span class="text-slate-400">AI 신뢰도 점수</span>
+                          <span class="font-bold text-[#E0001A]" x-text="project.confidenceScore + '%'"></span>
+                        </div>
+                        <div class="w-24 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                          <div class="h-full bg-[#E0001A]" :style="'width: ' + project.confidenceScore + '%'"></div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </template>
+                </div>
+
+                <!-- 2. Compact Table View (대량 데이터의 압도적인 시인성을 확보하는 기능) -->
+                <div x-show="viewMode === 'table'" class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm" style="display: none;">
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                      <thead>
+                        <tr class="bg-slate-100 border-b border-gray-200 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                          <th class="py-3 px-4">Hull No</th>
+                          <th class="py-3 px-4">선박 프로젝트명</th>
+                          <th class="py-3 px-4">건조 조선소</th>
+                          <th class="py-3 px-4">발주기관 (선주)</th>
+                          <th class="py-3 px-4">납기일자</th>
+                          <th class="py-3 px-4">ABB 오더 마감</th>
+                          <th class="py-3 px-4 text-right">예산/신조가</th>
+                          <th class="py-3 px-4 text-center">AI 신뢰도</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-100 text-xs">
+                        <template x-for="project in filteredAndSortedProjects()" :key="project.id">
+                          <tr @click="selectedProject = project; $nextTick(() => lucide.createIcons())" 
+                              class="hover:bg-slate-50 cursor-pointer transition">
+                            <td class="py-3 px-4 font-mono font-bold text-slate-600" x-text="project.hullNo"></td>
+                            <td class="py-3 px-4 font-bold text-slate-800" x-text="project.name"></td>
+                            <td class="py-3 px-4 text-slate-600" x-text="project.shipyard"></td>
+                            <td class="py-3 px-4 text-slate-600" x-text="project.company"></td>
+                            <td class="py-3 px-4 font-semibold text-slate-700" x-text="project.deliveryDate"></td>
+                            <td class="py-3 px-4 font-bold">
+                              <span :class="calculateOrderWindow(project.deliveryDate).isOverdue ? 'text-rose-600' : (calculateOrderWindow(project.deliveryDate).isUrgent ? 'text-amber-500' : 'text-emerald-600')"
+                                    x-text="calculateOrderWindow(project.deliveryDate).deadlineDateStr"></span>
+                            </td>
+                            <td class="py-3 px-4 text-right font-extrabold text-slate-800">
+                              <span x-text="project.currency === 'KRW' ? '₩ ' + (parseFloat(project.orderValue)/100000000).toFixed(1) + '억' : project.currency + ' $' + parseInt(project.orderValue).toLocaleString()"></span>
+                            </td>
+                            <td class="py-3 px-4 text-center">
+                              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700" x-text="project.confidenceScore + '%'"></span>
+                            </td>
+                          </tr>
+                        </template>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+            </div>
+          </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#232323] text-white py-8 mt-12 border-t-4 border-[#E0001A]">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between text-xs text-slate-400 gap-4">
+            <p>© 2026 ABB Korea Technical Sales - Ship Delivery Intelligence All rights reserved.</p>
+            <div class="flex gap-6">
+                <span>조달청 나라장터 API 실시간 연계</span>
+                <span>ABB Ability™ Data Integration</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Detail Dialog Modal (ABB Design Language: Red Highlights, Steel Grey background elements) -->
+    <div x-show="selectedProject" 
+         class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4"
+         style="display: none;"
+         x-cloak>
+      <template x-if="selectedProject">
+        <div class="bg-white w-full max-w-5xl rounded-2xl shadow-2xl border-t-8 border-[#E0001A] overflow-hidden max-h-[95vh] flex flex-col animate-scaleUp">
+          
+          <!-- Modal Header -->
+          <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+            <div class="flex items-center gap-2">
+              <i data-lucide="ship" class="text-[#E0001A] w-5 h-5"></i>
+              <span class="text-xs font-black text-slate-800 tracking-wider">PROJECT ANALYSIS SPECIFICATION (ABB KOREA)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button @click="triggerToast('Excel 조달 사양 다운로드가 완료되었습니다.')" title="Excel 다운로드" class="p-2 hover:bg-slate-200 rounded text-slate-500 transition">
+                <i data-lucide="download" class="w-4.5 h-4.5"></i>
+              </button>
+              <button @click="triggerToast('PDF 기술 영업 제안 보고서 작성이 개시됩니다.')" title="PDF 보고서 인쇄" class="p-2 hover:bg-slate-200 rounded text-slate-500 transition">
+                <i data-lucide="file-text" class="w-4.5 h-4.5"></i>
+              </button>
+              <button @click="selectedProject = null" class="p-2 hover:bg-slate-200 rounded transition text-slate-500">
+                <i data-lucide="x" class="w-5 h-5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Scrollable Content Body -->
+          <div class="flex-1 overflow-y-auto p-6 space-y-6">
+            
+            <!-- Top Summary Block -->
+            <div>
+              <span class="text-xs font-bold text-slate-400 font-mono" x-text="'📁 ABB Ability™ PUBLIC REGISTRY : ' + selectedProject.id"></span>
+              <h2 class="text-2xl font-black text-slate-800 mt-1 leading-tight" x-text="selectedProject.name"></h2>
+            </div>
+
+            <!-- 1. Clarksons-Style Vessel Specification Board -->
+            <div class="bg-slate-900 text-slate-100 rounded-xl p-6 border border-slate-800 shadow-lg space-y-4">
+              <h3 class="font-bold text-sm text-[#E0001A] flex items-center gap-2 tracking-wider">
+                <i data-lucide="sliders" class="w-4 h-4"></i> COMMERCIAL VESSEL DATABASE SPECIFICATION (상세 수집 스펙)
+              </h3>
+
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-4 text-xs">
+                
+                <!-- Column 1: Status & Hull -->
+                <div class="space-y-3 border-r border-slate-800 pr-4">
+                  <div>
+                    <span class="text-slate-400 block mb-0.5">Status (현상태)</span>
+                    <span class="font-bold text-white px-2 py-0.5 rounded bg-[#E0001A]/20 text-[#E0001A] border border-[#E0001A]/30" x-text="selectedProject.status"></span>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block mb-0.5">Hull No. (호선 번호)</span>
+                    <span class="font-bold text-white font-mono" x-text="selectedProject.hullNo"></span>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block mb-0.5">Type (선종)</span>
+                    <span class="font-semibold text-slate-200" x-text="selectedProject.shipType"></span>
+                  </div>
+                </div>
+
+                <!-- Column 2: Dimensions / Tonnage -->
+                <div class="space-y-3 border-r border-slate-800 pr-4">
+                  <div>
+                    <span class="text-slate-400 block mb-0.5">Dwt (재화중량)</span>
+                    <span class="font-semibold text-slate-200" x-text="selectedProject.dwt"></span>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block mb-0.5">GT (총톤수)</span>
+                    <span class="font-semibold text-slate-200" x-text="selectedProject.gt"></span>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block mb-0.5">CGT (보정 총톤수)</span>
+                    <span class="font-semibold text-slate-200" x-text="selectedProject.cgt"></span>
+                  </div>
+                </div>
+
+                <!-- Column 3: Builder & Dates -->
+                <div class="space-y-3 border-r border-slate-800 pr-4">
+                  <div>
+                    <span class="text-slate-400 block mb-0.5">Size / Unit (용량 단위)</span>
+                    <span class="font-bold text-emerald-400"><span x-text="selectedProject.size"></span> <span x-text="selectedProject.unit"></span></span>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block mb-0.5">Builder (건조사)</span>
+                    <span class="font-semibold text-slate-200" x-text="selectedProject.shipyard"></span>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block mb-0.5">Yard Status (야드 공정)</span>
+                    <span class="font-semibold text-amber-350" x-text="selectedProject.yardStatus"></span>
+                  </div>
+                </div>
+
+                <!-- Column 4: Green Systems -->
+                <div class="space-y-3">
+                  <div>
+                    <span class="text-slate-400 block mb-0.5">Alternative Fuel Types (대체 연료)</span>
+                    <span class="font-bold text-blue-400" x-text="selectedProject.altFuelType"></span>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block mb-0.5">SOx Scrubber Status</span>
+                    <span class="font-semibold text-slate-200" x-text="selectedProject.scrubberStatus"></span>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block mb-0.5">Eco - Electronic Engine</span>
+                    <span class="font-semibold text-slate-300 italic" x-text="selectedProject.ecoEngine"></span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Dual Column Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              <!-- Left Column: Commercial Parties & Timeline -->
+              <div class="space-y-6">
+                <div class="bg-slate-50 rounded-xl p-5 border border-slate-100 space-y-4">
+                  <h3 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
+                    <i data-lucide="building-2" class="text-[#E0001A] w-4.5 h-4.5"></i> Commercial & Owner Registry (관계 선사 정보)
+                  </h3>
+                  
+                  <div class="space-y-3 text-xs">
+                    <div class="flex items-center justify-between">
+                      <span class="text-slate-400">Contract Date (계약일자)</span>
+                      <span class="font-semibold text-slate-700" x-text="selectedProject.contractDate"></span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <span class="text-slate-400">Company (발주기관)</span>
+                      <span class="font-bold text-slate-700" x-text="selectedProject.company"></span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <span class="text-slate-400">Group Company (상위 지주 부처)</span>
+                      <span class="font-semibold text-slate-700" x-text="selectedProject.groupCompany"></span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <span class="text-slate-400">Operator (실제 운항 부서)</span>
+                      <span class="font-semibold text-slate-700" x-text="selectedProject.client"></span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <span class="text-slate-400">Budget / Newbuilding Price</span>
+                      <span class="font-bold text-blue-600" x-text="selectedProject.currency === 'KRW' ? '₩ ' + (parseFloat(selectedProject.orderValue)/100000000).toFixed(1) + ' 억 원' : selectedProject.currency + ' $' + parseInt(selectedProject.orderValue).toLocaleString()"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Drive Procurement Requirement Details Block -->
+                <div class="p-5 rounded-xl border space-y-3"
+                     :class="calculateOrderWindow(selectedProject.deliveryDate).isOverdue ? 'bg-rose-50 border-rose-200 text-rose-950' : (calculateOrderWindow(selectedProject.deliveryDate).isUrgent ? 'bg-amber-50 border-amber-200 text-amber-950' : 'bg-blue-50/50 border-blue-100 text-slate-900')">
+                  <h4 class="font-bold text-sm flex items-center gap-1.5">
+                    <i data-lucide="shopping-bag" class="w-4 h-4"></i> Drive 제품군 긴급 오더 분석
+                  </h4>
+                  <p class="text-xs leading-relaxed opacity-90">
+                    본 선박의 납기는 <strong class="font-semibold">{selectedProject.deliveryDate}</strong> 이므로, ABB 공장 제작과 조립 기간 4개월을 역산한 최종 드라이브 발주 기한은 <strong class="font-bold underline">{calculateOrderWindow(selectedProject.deliveryDate).deadlineDateStr}</strong>입니다.
+                  </p>
+                  
+                  <div class="p-3 bg-white/80 rounded-lg border border-slate-100 flex items-center justify-between text-xs">
+                    <span>현재 기준 여유 월수:</span>
+                    <span class="font-extrabold text-sm" :class="calculateOrderWindow(selectedProject.deliveryDate).isOverdue ? 'text-[#E0001A] animate-pulse' : (calculateOrderWindow(selectedProject.deliveryDate).isUrgent ? 'text-amber-600' : 'text-blue-600')">
+                      <span x-text="calculateOrderWindow(selectedProject.deliveryDate).isOverdue ? '기한 초과 (' + Math.abs(calculateOrderWindow(selectedProject.deliveryDate).monthsLeft) + '개월 전 오더 완료 요구됨)' : calculateOrderWindow(selectedProject.deliveryDate).monthsLeft + '개월 남음'"></span>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Procurement History Timeline -->
+                <div class="space-y-3">
+                  <h3 class="font-bold text-sm text-slate-800 flex items-center gap-1.5">
+                    <i data-lucide="history" class="w-4 h-4 text-slate-600"></i> 조달 및 납기 변동 타임라인
+                  </h3>
+                  <div class="border-l-2 border-slate-100 pl-4 py-2 space-y-4">
+                    <template x-for="item in selectedProject.history" :key="item.id">
+                      <div class="relative">
+                        <span class="absolute -left-[21px] top-1 w-2.5 h-2.5 bg-[#E0001A] rounded-full"></span>
+                        <span class="text-[10px] text-slate-400 block font-mono" x-text="item.date"></span>
+                        <span class="text-xs font-bold text-slate-700 mt-0.5 block" x-text="item.action"></span>
+                        <span class="text-xs text-slate-500 block" x-text="item.detail"></span>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Column: AI Reasoning Report & Sources -->
+              <div class="space-y-6">
+                
+                <!-- AI Report Card -->
+                <div class="bg-slate-900 text-slate-100 rounded-xl p-5 border border-slate-800 space-y-4 shadow-inner">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <i data-lucide="cpu" class="text-blue-400 w-4 h-4"></i>
+                      <h4 class="text-xs font-bold uppercase tracking-wider text-slate-200">AI Thinking 검증 결과</h4>
+                    </div>
+                    <span class="text-xs font-bold text-emerald-400" x-text="selectedProject.confidenceScore + '% Verified'"></span>
+                  </div>
+
+                  <p class="text-xs text-slate-300 leading-relaxed bg-slate-800/50 p-3 rounded-xl" x-text="selectedProject.aiSummary"></p>
+
+                  <!-- AI Logic Checklist -->
+                  <div class="space-y-2.5 pt-2 border-t border-slate-800">
+                    <div class="flex items-center justify-between text-xs">
+                      <span class="text-slate-400">조달청 나라장터 공고번호 대조</span>
+                      <span class="font-semibold" :class="selectedProject.aiReasoning.g2bCrossCheck ? 'text-emerald-400' : 'text-amber-500'" x-text="selectedProject.aiReasoning.g2bCrossCheck ? '✓ 검증됨' : '⚠︎ 매칭 대기'"></span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                      <span class="text-slate-400">정부 부처/지자체 고시 예산 검증</span>
+                      <span class="font-semibold" :class="selectedProject.aiReasoning.officialSourceVerify ? 'text-emerald-400' : 'text-rose-500'" x-text="selectedProject.aiReasoning.officialSourceVerify ? '✓ 검증됨' : '✗ 불일치'"></span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                      <span class="text-slate-400">동일 선박 중복 등록 여부</span>
+                      <span class="text-emerald-400 font-semibold" x-text="selectedProject.aiReasoning.duplicateCheck ? '✓ 제거완료' : '해당없음'"></span>
+                    </div>
+                  </div>
+
+                  <div class="text-[10px] text-slate-400 leading-relaxed pt-2 border-t border-slate-800">
+                    <strong class="text-slate-200 block mb-1">AI 판단 근거:</strong>
+                    <span x-text="selectedProject.aiReasoning.detailText"></span>
+                  </div>
+                </div>
+
+                <!-- Sources Tracked -->
+                <div class="space-y-3">
+                  <h3 class="font-bold text-sm text-slate-800 font-bold">수집된 신뢰 출처 정보</h3>
+                  <div class="space-y-2">
+                    <template x-for="src in selectedProject.sources" :key="src.id">
+                      <a :href="src.url" target="_blank" rel="noreferrer" class="flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-xl hover:bg-slate-100 transition group">
+                        <div class="space-y-1">
+                          <span class="text-[10px] text-slate-400 block"><span x-text="src.publisher"></span> • <span x-text="src.date"></span></span>
+                          <span class="text-xs font-bold text-slate-700 group-hover:text-[#E0001A] transition" x-text="src.title"></span>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="text-slate-400 group-hover:text-[#E0001A] transition w-3.5 h-3.5"></i>
+                      </a>
+                    </template>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+
+</body>
+</html>
