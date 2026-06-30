@@ -1,8 +1,8 @@
-fastapi0.110.0
-uvicorn0.28.0
-requests2.31.0
-beautifulsoup44.12.3
-pydantic2.6.4
-apscheduler3.10.4
-python-dotenv1.0.1
-psycopg2-binary2.9.9
+fastapi==0.110.0
+uvicorn==0.28.0
+requests==2.31.0
+beautifulsoup4==4.12.3
+pydantic==2.6.4
+apscheduler==3.10.4
+python-dotenv==1.0.1
+psycopg2-binary==2.9.9
